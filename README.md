@@ -9,5 +9,7 @@ Followed the guide posted by <b>FreeCodeCamp</b> on <b>Youtube</b>.<br />
 I changed and added a couple of things to spice it up and learn more than what the video called for. I made a mistake and downloaded files that were too large, therefore I had to learn to resize the images within the code because I cannot be bothered to go back and download the correct size.<br />
 <b>Link to video used:</b> https://youtu.be/FfWpgLFMI7w<br />
 <br />
-<h4>Game 2 - TBD</h4>
+<h4>Game 2 - Souls Adventure</h4>
+I've always wanted to create a text based game. My goal is to create a text game that allows the user to click buttons to make a choice to proceed through the game.
+As of 8/28/21, I am currently struggling with getting text to wrap so an entire paragraph can be displayed.
 
