@@ -2,9 +2,7 @@ import pygame
 import sys
 from pygame.locals import *
 import textwrap
-from textwrap import fill
 
-pygame.init()
 
 #   Color CONSTANTS
 BLACK = (  0,  0,  0)
@@ -13,29 +11,51 @@ RED   = (250,  0,  0)
 GREEN = (  0,250,  0)
 BRIGHT_RED   = (200,  0,  0)
 BRIGHT_GREEN = (  0,200,  0)
+GRAY = (96, 96, 96)
+BRIGHT_GRAY = (128, 128, 128)
+
+pygame.init()
 
 #   Game variables
-#   Defines the properties of the font in program
-text = pygame.font.Font('freesansbold.ttf', 20)
+myfont = pygame.font.Font('freesansbold.ttf', 20)
+rect = Rect(10, 10, 400, 400)
+color = "WHITE"
 
-#   Defines how text will be displayed on the screen
-def blit_text(game_display, text, pos, font, color=pygame.Color('white')):
-    text = []
-    words = [word.split(' ') for word in text]
-    space = font.size(' ')[0]
-    max_width, max_height = game_display.get_size()
-    x, y = pos
-    for line in words:
-        for word in line:
-            word_surface = font.render(word, 0, color)
-            word_width, word_height = word_surface.get_size
-            if x + word_width >= max_width:
-                x = pos[0]
-                y += word_height
-            game_display.blit(word_surface, (x, y))
-            x += word_width + space
-        x = pos[0]
-        y += word_height
+
+items = []
+
+#   Prints and wraps the text within a square
+#   https://www.pygame.org/wiki/TextWrap
+#   https://medium.com/@maxknivets
+def drawText(surface, text, rect, color, aa=False, bkg=None):
+    rect = Rect(10, 10, 400, 400)
+    color = "WHITE"
+    y = rect.top
+    lineSpacing = -2
+    # get the height of the font
+    fontHeight = font.size("Tg")[1]
+    while text:
+        i = 1
+        # determine if the row of text will be outside our area
+        if y + fontHeight > rect.bottom:
+            break
+        # determine maximum width of line
+        while font.size(text[:i])[0] < rect.width and i < len(text):
+            i += 1
+        # if we've wrapped the text, then adjust the wrap to the last word
+        if i < len(text):
+            i = text.rfind(" ", 0, i) + 1
+        # render the line and blit it to the surface
+        if bkg:
+            image = font.render(text[:i], 1, color, bkg)
+            image.set_colorkey(bkg)
+        else:
+            image = font.render(text[:i], aa, color)
+        game_display.blit(image, (rect.left, y))
+        y += fontHeight + lineSpacing
+        # remove the text we just blitted
+        text = text[i:]
+    return text
 
 #   Function for game
 def button_check(button):
@@ -68,21 +88,11 @@ def button_draw(button):
     game_display.blit(image, rect)
 
 def text_objects(text, font):
-    text = fill(text, 65)
+    text = textwrap.fill(text, 65)
     image = font.render(text, True, WHITE)
     rect  = image.get_rect()
     return image, rect
 
-def message_display(text):
-    font = pygame.font.Font("freesansbold.ttf" ,60)
-
-    image, rect = text_objects(text, font)
-    rect.center = game_display_rect.center
-    game_display.blit(image, rect)
-
-    pygame.display.update()
-
-#   Function to quit the game with a coded button
 def quit_game():
     pygame.quit()
     quit()
@@ -95,28 +105,16 @@ def quit_game():
 
 #   Intro to the game, choice to start or quit.
 def intro():
-    pygame.display.update()
     text = "Welcome to your Souls adventure!"
-
-    #   Set the font for the segment
-    font = pygame.font.Font("freesansbold.ttf", 20)
-
-    #   Setting the top text
-    image, rect = text_objects(text, font)
-
-    #   Set the position of the text
-    rect.topleft = game_display_rect.topleft
-
-    #   Printing the text
-    game_display.blit(image, rect)
+    font = pygame.font.Font('freesansbold.ttf', 20)
 
     #   Defines the buttons for the code segment in a list
     buttons = [
         {
             'msg': 'Start',
             'rect': pygame.Rect(50, 650, 400, 70),
-            'ac': GREEN,
-            'ic': BRIGHT_GREEN,
+            'ac': GRAY,
+            'ic': BRIGHT_GRAY,
             'action': start,
         },
         {
@@ -139,7 +137,7 @@ def intro():
                 button_check(buttons[1])
 
         #    Prints/Draws the text and buttons on the screen
-        blit_text(game_display, text, (10, 10), font)
+        drawText(game_display, text, rect, color)
         button_draw(buttons[0])
         button_draw(buttons[1])
 
@@ -148,49 +146,31 @@ def intro():
 
 
 
-
-
-
 #    The start of the adventure
 def start():
-    #   Test variable for text
-    text = fill("You awaken in a field, you look around and can see a sword and shield on the ground and you see an entrance to some unknown place. But first, you must choose whether to start your adventure!")
-    #   Set length of text using TextWrap
-
-    #   Set the font for the segment
-    font = pygame.font.Font("freesansbold.ttf", 20)
-
-    #   Setting the top text
-    image, rect = text_objects(text, font)
-    #   Set the position of the text
-    rect.topleft = game_display_rect.topleft
-
-    #   Printing the text
-    game_display.blit(image, rect)
-
-
-
-    #   For now, all buttons loop to intro.
+    #   Set the text variable for this segment
+    text = "You awaken in a field, you look around and can see a sword and shield on the ground and you see an entrance to some unknown place. But first, you must choose whether to start your adventure!"
+    #   Create buttons
     buttons = [
         {
             'msg': 'Pick up sword and shield',
             'rect': pygame.Rect(50, 575, 400, 70),
-            'ac': RED,
-            'ic': BRIGHT_RED,
+            'ac': GRAY,
+            'ic': BRIGHT_GRAY,
             'action': intro,
         },
         {
             'msg': 'Look in the nearby field',
             'rect': pygame.Rect(50, 650, 400, 70),
-            'ac': RED,
-            'ic': BRIGHT_RED,
-            'action': intro,
+            'ac': GRAY,
+            'ic': BRIGHT_GRAY,
+            'action': field,
         },
         {
             'msg': 'Head into dungeon',
             'rect': pygame.Rect(50, 725, 400, 70),
-            'ac': RED,
-            'ic': BRIGHT_RED,
+            'ac': GRAY,
+            'ic': BRIGHT_GRAY,
             'action': intro,
         }
     ]
@@ -202,18 +182,54 @@ def start():
                 button_check(buttons[0])
                 button_check(buttons[1])
                 button_check(buttons[2])
-    #    text_draw(top_text[0])
-        blit_text(game_display, text, (10, 10), font)
+        #       Prints the objects on the screen
+        drawText(game_display, text, rect, color)
         button_draw(buttons[0])
         button_draw(buttons[1])
         button_draw(buttons[2])
 
         pygame.display.update()
 
+def field():
+    #   Set the text variable for this segment
+    text = "You walk into the field and find a small key. Do you pick it up?"
+    #   Create buttons
+    buttons = [
+        {
+            'msg': 'Yes',
+            'rect': pygame.Rect(50, 650, 400, 70),
+            'ac': GRAY,
+            'ic': BRIGHT_GRAY,
+            'action': items.append("keyA"),
+            'action': intro,
 
 
+        },
+        {
+            'msg': 'No',
+            'rect': pygame.Rect(50, 725, 400, 70),
+            'ac': GRAY,
+            'ic': BRIGHT_GRAY,
+            'action': intro,
+        }
+    ]
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit_game()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                button_check(buttons[0])
+                button_check(buttons[1])
+
+        #       Prints the objects on the screen
+        drawText(game_display, text, rect, color)
+        button_draw(buttons[0])
+        button_draw(buttons[1])
+
+        pygame.display.update()
 
 
+def
 
 
 
@@ -224,6 +240,9 @@ def start():
 
 #    Initialize pygame
 pygame.init()
+
+#   Defines the properties of the font in program
+font = pygame.font.Font('freesansbold.ttf', 20)
 
 #   Set screen size
 game_display = pygame.display.set_mode((500,800))
