@@ -10,6 +10,8 @@ I changed and added a couple of things to spice it up and learn more than what t
 <b>Link to video used:</b> https://youtu.be/FfWpgLFMI7w<br />
 <br />
 <h4>Game 2 - Souls Adventure</h4>
-I've always wanted to create a text based game. My goal is to create a text game that allows the user to click buttons to make a choice to proceed through the game.
-As of 8/28/21, I am currently struggling with getting text to wrap so an entire paragraph can be displayed.
+I've always wanted to create a text based game. My goal is to create a text game that allows the user to click buttons to make a choice to proceed through the game.<br />
+As of 8/28/21, I am currently struggling with getting text to wrap so an entire paragraph can be displayed.<br >
+8/29/21 - I have managed to print wraped text using pygame. Glad I did not give up. Finishing the game should be fairly simple now that I have jumped past all the major obstacles I ran into with tkinter.
+
 
